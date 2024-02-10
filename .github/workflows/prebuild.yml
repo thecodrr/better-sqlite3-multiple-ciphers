@@ -6,8 +6,7 @@ on:
       - published
 
 env:
-  NODE_BUILD_CMD: npx --no-install prebuild -r node -t 18.0.0 -t 20.0.0 --include-regex 'better_sqlite3.node$' -u ${{ secrets.GITHUB_TOKEN }}
-  ELECTRON_BUILD_CMD: npx --no-install prebuild -r electron -t 16.0.0 -t 17.0.0 -t 18.0.0 -t 19.0.0 -t 20.0.0 -t 21.0.0 -t 22.0.0 -t 23.0.0 -t 24.0.0 -t 25.0.0 -t 26.0.0 -t 27.0.0 -t 28.0.0 --include-regex 'better_sqlite3.node$' -u ${{ secrets.GITHUB_TOKEN }}
+  ELECTRON_BUILD_CMD: npx --no-install prebuild -r electron -t 28.0.0 --include-regex 'better_sqlite3.node$' -u ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   prebuild:
@@ -31,46 +30,17 @@ jobs:
       - if: ${{ ! startsWith(matrix.os, 'windows') }}
         run: python3 -m pip install setuptools
       - run: npm install --ignore-scripts
-      - run: ${{ env.NODE_BUILD_CMD }}
       - run: ${{ env.ELECTRON_BUILD_CMD }}
       - if: matrix.os == 'windows-2019'
         run: |
-          ${{ env.NODE_BUILD_CMD }} --arch ia32
           ${{ env.ELECTRON_BUILD_CMD }} --arch ia32
-          ${{ env.NODE_BUILD_CMD }} --arch arm64
           ${{ env.ELECTRON_BUILD_CMD }} --arch arm64
-
-  prebuild-alpine-linux:
-    name: Prebuild on Alpine-Linux (x64)
-    runs-on: ubuntu-latest
-    container: node:16-alpine
-    steps:
-      - uses: actions/checkout@v4
-      - run: apk add build-base git python3 py3-setuptools --update-cache
-      - run: npm install --ignore-scripts
-      - run: ${{ env.NODE_BUILD_CMD }}
-      - run: ${{ env.ELECTRON_BUILD_CMD }}
-
-  prebuild-alpine-linux-arm64:
-    name: Prebuild on Alpine-Linux (arm64)
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v2
-      - run: |
-          docker run --rm -v $(pwd):/tmp/project --entrypoint /bin/sh --platform linux/arm64 node:16-alpine -c "\
-          apk add build-base git python3 py3-setuptools --update-cache && \
-          cd /tmp/project && \
-          npm install --ignore-scripts && \
-          ${{ env.NODE_BUILD_CMD }} && \
-          ${{ env.ELECTRON_BUILD_CMD }}"
 
   prebuild-linux-arm:
     strategy:
       fail-fast: false
       matrix:
         arch:
-          - arm/v7
           - arm64
     name: Prebuild on Linux (${{ matrix.arch }})
     runs-on: ubuntu-latest
@@ -81,5 +51,4 @@ jobs:
           docker run --rm -v $(pwd):/tmp/project --entrypoint /bin/sh --platform linux/${{ matrix.arch }} node:16 -c "\
           cd /tmp/project && \
           npm install --ignore-scripts && \
-          ${{ env.NODE_BUILD_CMD }} && \
           ${{ env.ELECTRON_BUILD_CMD }}"
