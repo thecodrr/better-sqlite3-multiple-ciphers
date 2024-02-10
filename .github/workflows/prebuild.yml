@@ -35,8 +35,10 @@ jobs:
       - run: ${{ env.ELECTRON_BUILD_CMD }}
       - if: matrix.os == 'windows-2019'
         run: |
-          ${{ env.NODE_BUILD_CMD }} --arch ia32 arm64
-          ${{ env.ELECTRON_BUILD_CMD }} --arch ia32 arm64
+          ${{ env.NODE_BUILD_CMD }} --arch ia32
+          ${{ env.ELECTRON_BUILD_CMD }} --arch ia32
+          ${{ env.NODE_BUILD_CMD }} --arch arm64
+          ${{ env.ELECTRON_BUILD_CMD }} --arch arm64
 
   prebuild-alpine-linux:
     name: Prebuild on Alpine-Linux (x64)
