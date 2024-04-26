@@ -28,7 +28,7 @@ jobs:
       - if: ${{ startsWith(matrix.os, 'windows') }}
         run: pip.exe install setuptools
       - if: ${{ ! startsWith(matrix.os, 'windows') && matrix.os != 'macos-14' }}
-        run: python3 -m pip install setuptools
+        run: python3 -m pip install --break-system-packages setuptools
       - if: matrix.os == 'macos-14'
         run: python3 -m pip install --break-system-packages setuptools
       - run: npm install --ignore-scripts
