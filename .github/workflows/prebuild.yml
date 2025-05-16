@@ -6,7 +6,7 @@ on:
       - published
 
 env:
-  ELECTRON_BUILD_CMD: npx --no-install prebuild -r electron -t 31.0.0 --include-regex 'better_sqlite3.node$' -u ${{ secrets.GITHUB_TOKEN }}
+  ELECTRON_BUILD_CMD: npx --no-install prebuild -r electron -t 31.0.0 -t 34.0.0 --include-regex 'better_sqlite3.node$' -u ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   prebuild:
